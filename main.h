@@ -5,45 +5,42 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <limits.h>
-#include <unistd.h>
-
-
 
 /**
- * struct format - match the conversion specifiers for printf
- * @id: type char pointer of the specifier i.e (l, h) for (d, i, u, o, x, X)
- * @f: type pointer to function for the conversion specifier
+ * struct conversion_specifier - match the conversion specifiers for printf
+ * @specifier: type char pointer of the specifier i.e (l, h) for (d, i, u, o, x, X)
+ * @function: type pointer to function for the conversion specifier
  *
  */
 
-typedef struct format
-{
-	char *id;
-	int (*f)();
-} convert_match;
+#include <unistd.h>
 
-int print_pointer(va_list val);
-int print_hex_aux(unsigned long int num);
-int print_HEX_aux(unsigned int num);
-int print_es(va_list val);
-int print_HEX(va_list val);
-int print_hex(va_list val);
-int print_oct(va_list val);
-int print_unsigned(va_list args);
-int print_binary(va_list val);
-int print_srev(va_list args);
-int print_rot13(va_list args);
-int print_int(va_list args);
-int print_dec(va_list args);
-int _strlen(char *s);
-int *_strcpy(char *dest, char *src);
-int _strlenc(const char *s);
-int rev_string(char *s);
-int _strlenc(const char *s);
-int print_37(void);
-int print_charac(va_list val);
-int print_string(va_list val);
-int _putchar(char c);
+typedef struct conversion_specifier
+{
+	char *specifier;
+	int (*function)();
+} specifier_handler;
+
+int print_pointer(va_list args);
+int print_hexadecimal_aux(unsigned long int num);
+int print_hexadecimal(va_list args);
+int print_exclusive_string(va_list args);
+int print_octal(va_list args);
+int print_unsigned_decimal(va_list args);
+int print_binary(va_list args);
+int print_reverse_string(va_list args);
+int print_rot13_string(va_list args);
+int print_integer(va_list args);
+int print_decimal(va_list args);
+int string_length(char *s);
+int string_copy(char *dest, char *src);
+int custom_string_length(const char *s);
+int custom_string_length(const char *s);
+int print_percent(void);
+int print_character(va_list args);
+int reverse_string(char *s);
+int print_custom_string(va_list args);
+int write_character(char c);
 int _printf(const char *format, ...);
 
 #endif
