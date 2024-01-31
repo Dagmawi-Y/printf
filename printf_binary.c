@@ -3,6 +3,23 @@
 #include "main.h"
 
 /**
+ * print_binary - Print a number in binary
+ * @n: Number to print
+ *
+ * Return: Number of binary digits printed
+ */
+int print_binary(unsigned int n)
+{
+    int count = 0;
+
+    if (n / 2)
+        count += print_binary(n / 2);
+
+    write(1, &((char){n % 2 + '0'}), 1);
+    return (count + 1);
+}
+
+/**
  * _printf - Custom printf function
  * @format: Format string with conversion specifiers
  *
@@ -13,25 +30,15 @@ int _printf(const char *format, ...)
     va_list args;
     int count = 0;
     const char *ptr;
-    char c, *str;
 
     va_start(args, format);
 
     for (ptr = format; *ptr; ptr++)
     {
-        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's'))
+        if (*ptr == '%' && *(ptr + 1) == 'b')
         {
-            if (*(ptr + 1) == 'c')
-                c = va_arg(args, int);
-            else
-                str = va_arg(args, char *);
-
-            if (!str)
-                str = "(null)";
-
-            while (*str || (*(ptr + 1) == 'c' && ++count))
-                write(1, (*(ptr + 1) == 'c') ? &c : str++, 1);
-
+            unsigned int num = va_arg(args, unsigned int);
+            count += print_binary(num);
             ptr++;
         }
         else

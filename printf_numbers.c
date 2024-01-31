@@ -3,6 +3,30 @@
 #include "main.h"
 
 /**
+ * print_number - Print a number (int)
+ * @n: Number to print
+ *
+ * Return: Number of digits printed
+ */
+int print_number(int n)
+{
+    int count = 0;
+
+    if (n < 0)
+    {
+        write(1, "-", 1);
+        n = -n;
+        count++;
+    }
+
+    if (n / 10)
+        count += print_number(n / 10);
+
+    write(1, &((char){n % 10 + '0'}), 1);
+    return (count + 1);
+}
+
+/**
  * _printf - Custom printf function
  * @format: Format string with conversion specifiers
  *
@@ -13,25 +37,15 @@ int _printf(const char *format, ...)
     va_list args;
     int count = 0;
     const char *ptr;
-    char c, *str;
 
     va_start(args, format);
 
     for (ptr = format; *ptr; ptr++)
     {
-        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's'))
+        if (*ptr == '%' && (*(ptr + 1) == 'd' || *(ptr + 1) == 'i'))
         {
-            if (*(ptr + 1) == 'c')
-                c = va_arg(args, int);
-            else
-                str = va_arg(args, char *);
-
-            if (!str)
-                str = "(null)";
-
-            while (*str || (*(ptr + 1) == 'c' && ++count))
-                write(1, (*(ptr + 1) == 'c') ? &c : str++, 1);
-
+            int num = va_arg(args, int);
+            count += print_number(num);
             ptr++;
         }
         else
