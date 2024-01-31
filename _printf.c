@@ -26,7 +26,7 @@ int _printf(const char *format, ...)
 
     for (ptr = format; *ptr != '\0'; ++ptr)
     {
-        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i'))
+        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i' || *(ptr + 1) == 'u'))
         {
             switch (*(ptr + 1))
             {
@@ -57,6 +57,15 @@ int _printf(const char *format, ...)
                     char buffer[20];
                     int num = va_arg(args, int);
                     sprintf(buffer, "%d", num);
+                    count += write(1, buffer, strlen(buffer));
+                }
+                    break;
+                case 'u':
+                {
+                    /* Assuming a reasonable buffer size */
+                    char buffer[20];
+                    unsigned int num = va_arg(args, unsigned int);
+                    sprintf(buffer, "%u", num);
                     count += write(1, buffer, strlen(buffer));
                 }
                     break;
