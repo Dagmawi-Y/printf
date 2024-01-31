@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <stdarg.h>
+#include <stddef.h>  // Include this header for NULL
 
 #define BUFFER_SIZE 1024
 
