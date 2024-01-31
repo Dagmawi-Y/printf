@@ -78,6 +78,13 @@ int _printf(const char *format, ...)
                     count += write(1, buffer, strlen(buffer));
                 }
                     break;
+                case 'o':
+                case 'x':
+                case 'X':
+                    count += print_hex_oct(ptr, args);
+                    ++ptr;
+                    break;
+
                 default:
                     return (-1);
             }
