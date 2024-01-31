@@ -1,85 +1,77 @@
 #include "main.h"
 #include <stdarg.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 
 /**
  * _printf - Custom printf function
- * @format: Format string containing conversion specifiers
+ * @format: Format string
  *
- * Return: Number of characters printed (excluding null byte)
+ * Return: Number of characters printed
  */
 int _printf(const char *format, ...)
 {
     va_list args;
     int count = 0;
+    const char *ptr;
+    char c;
+    char *str;
+    void *addr;
+
+    va_start(args, format);
 
     if (format == NULL)
         return (-1);
 
-    va_start(args, format);
-    count = parse_format(format, args);
-    va_end(args);
-
-    return (count);
-}
-
-/**
- * parse_format - Parse the format string and print the corresponding values
- * @format: Format string containing conversion specifiers
- * @args: Variable arguments list
- *
- * Return: Number of characters printed (excluding null byte)
- */
-int parse_format(const char *format, va_list args)
-{
-    int i = 0, count = 0;
-
-    while (format && format[i])
+    for (ptr = format; *ptr != '\0'; ++ptr)
     {
-        if (format[i] == '%' && format[i + 1] != '\0')
+        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i'))
         {
-            i++;
-            count += handle_format(format[i], args);
+            switch (*(ptr + 1))
+            {
+                case 'c':
+                    c = va_arg(args, int);
+                    count += write(1, &c, 1);
+                    break;
+                case 's':
+                    str = va_arg(args, char *);
+                    count += write(1, str, strlen(str));
+                    break;
+                case '%':
+                    count += write(1, "%", 1);
+                    break;
+                case 'p':
+                    addr = va_arg(args, void *);
+                    {
+                        /* Assuming a reasonable buffer size */
+                        char buffer[20];
+                        sprintf(buffer, "%p", addr);
+                        count += write(1, buffer, strlen(buffer));
+                    }
+                    break;
+                case 'd':
+                case 'i':
+                {
+                    /* Assuming a reasonable buffer size */
+                    char buffer[20];
+                    int num = va_arg(args, int);
+                    sprintf(buffer, "%d", num);
+                    count += write(1, buffer, strlen(buffer));
+                }
+                    break;
+                default:
+                    return (-1);
+            }
+            ++ptr;
         }
         else
         {
-            write(1, &format[i], 1);
-            count++;
+            count += write(1, ptr, 1);
         }
-        i++;
     }
 
-    return (count);
-}
-
-/**
- * handle_format - Handle each conversion specifier and print corresponding value
- * @specifier: Conversion specifier character
- * @args: Variable arguments list
- *
- * Return: Number of characters printed for the conversion specifier
- */
-int handle_format(char specifier, va_list args)
-{
-    int count = 0;
-
-    switch (specifier)
-    {
-        case 'c':
-            count += print_char(args);
-            break;
-        case 's':
-            count += print_string(args);
-            break;
-        case '%':
-            write(1, "%", 1);
-            count++;
-            break;
-        default:
-            write(1, "%", 1);
-            write(1, &specifier, 1);
-            count += 2;
-    }
+    va_end(args);
 
     return (count);
 }
