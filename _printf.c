@@ -26,7 +26,7 @@ int _printf(const char *format, ...)
 
     for (ptr = format; *ptr != '\0'; ++ptr)
     {
-        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i' || *(ptr + 1) == 'u' || *(ptr + 1) == 'b'))
+        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i' || *(ptr + 1) == 'u' || *(ptr + 1) == 'b' || *(ptr + 1) == 'x' || *(ptr + 1) == 'X'))
         {
             switch (*(ptr + 1))
             {
@@ -78,11 +78,14 @@ int _printf(const char *format, ...)
                     count += write(1, buffer, strlen(buffer));
                 }
                     break;
-                case 'o':
                 case 'x':
                 case 'X':
-                    count += print_hex_oct(ptr, args);
-                    ++ptr;
+                {
+                    /* Assuming a reasonable buffer size */
+
+                    unsigned int num = va_arg(args, unsigned int);
+                    count += print_hex(num, (*(ptr + 1) == 'X') ? 1 : 0);
+                }
                     break;
 
                 default:

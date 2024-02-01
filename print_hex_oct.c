@@ -36,12 +36,9 @@ int print_hex_oct(const char *format, va_list args)
                     count += print_octal(num);
                     break;
                 case 'x':
-                    num = va_arg(args, unsigned int);
-                    count += print_hex(num, 0);
-                    break;
                 case 'X':
                     num = va_arg(args, unsigned int);
-                    count += print_hex(num, 1);
+                    count += print_hex(num, (*(format_ptr + 1) == 'X') ? 1 : 0);
                     break;
                 default:
                     fprintf(stderr, "Error: Unknown conversion specifier '%c'\n", *(format_ptr + 1));
