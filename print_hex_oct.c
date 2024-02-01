@@ -1,8 +1,12 @@
 #include "main.h"
+#include <stdio.h>
 #include <stdarg.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <string.h>
+
+int print_unsigned(unsigned int num);
+int print_octal(unsigned int num);
+int print_hex(unsigned int num, int uppercase);
 
 /**
  * print_hex_oct - Handles %u, %o, %x, %X conversion specifiers
@@ -14,53 +18,82 @@
 int print_hex_oct(const char *format, va_list args)
 {
     int count = 0;
-    const char *ptr;
+    const char *format_ptr;
     unsigned int num;
 
-    for (ptr = format; *ptr != '\0'; ++ptr)
+    for (format_ptr = format; *format_ptr != '\0'; ++format_ptr)
     {
-        if (*ptr == '%' && (*(ptr + 1) == 'u' || *(ptr + 1) == 'o' || *(ptr + 1) == 'x' || *(ptr + 1) == 'X'))
+        if (*format_ptr == '%' && (*(format_ptr + 1) == 'u' || *(format_ptr + 1) == 'o' || *(format_ptr + 1) == 'x' || *(format_ptr + 1) == 'X'))
         {
-            switch (*(ptr + 1))
+            switch (*(format_ptr + 1))
             {
                 case 'u':
-                    /* Assuming a reasonable buffer size */
-                {
-                    char buffer_u[20];
                     num = va_arg(args, unsigned int);
-                    sprintf(buffer_u, "%u", num);
-                    count += write(1, buffer_u, strlen(buffer_u));
-                }
+                    count += print_unsigned(num);
                     break;
                 case 'o':
-                    /* Assuming a reasonable buffer size */
-                {
-                    char buffer_o[20];
                     num = va_arg(args, unsigned int);
-                    sprintf(buffer_o, "%o", num);
-                    count += write(1, buffer_o, strlen(buffer_o));
-                }
+                    count += print_octal(num);
                     break;
                 case 'x':
-                case 'X':
-                    /* Assuming a reasonable buffer size */
-                {
-                    char buffer_x[20];
                     num = va_arg(args, unsigned int);
-                    sprintf(buffer_x, (*(ptr + 1) == 'x') ? "%x" : "%X", num);
-                    count += write(1, buffer_x, strlen(buffer_x));
-                }
+                    count += print_hex(num, 0);
+                    break;
+                case 'X':
+                    num = va_arg(args, unsigned int);
+                    count += print_hex(num, 1);
                     break;
                 default:
+                    fprintf(stderr, "Error: Unknown conversion specifier '%c'\n", *(format_ptr + 1));
                     return (-1);
             }
-            ++ptr;
+            ++format_ptr;
         }
         else
         {
-            count += write(1, ptr, 1);
+            count += write(1, format_ptr, 1);
         }
     }
 
     return (count);
+}
+
+/**
+ * print_unsigned - Print an unsigned integer
+ * @num: Unsigned int to print
+ *
+ * Return: Number of characters printed
+ */
+int print_unsigned(unsigned int num)
+{
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%u", num);
+    return write(1, buffer, strlen(buffer));
+}
+
+/**
+ * print_octal - Print an octal number
+ * @num: Unsigned int to print in octal
+ *
+ * Return: Number of characters printed
+ */
+int print_octal(unsigned int num)
+{
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%o", num);
+    return write(1, buffer, strlen(buffer));
+}
+
+/**
+ * print_hex - Print a hexadecimal number
+ * @num: Unsigned int to print in hexadecimal
+ * @uppercase: Use uppercase letters (1) or not (0)
+ *
+ * Return: Number of characters printed
+ */
+int print_hex(unsigned int num, int uppercase)
+{
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), (uppercase ? "%X" : "%x"), num);
+    return write(1, buffer, strlen(buffer));
 }

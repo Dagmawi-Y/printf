@@ -21,8 +21,8 @@ int main(void)
     _printf("String:%s\n", "I am a string !");
     _printf("Address:%p\n", addr);
     _printf("Percent:%%\n");
-    _printf("%b\n", 98);
-    _printf("%x\n", "0XFFFF");
+    _printf("Binary:%b\n", 98);
+    _printf("Hexadecimal:%X\n", 255);
 
     return (0);
 }
