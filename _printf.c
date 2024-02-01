@@ -26,7 +26,7 @@ int _printf(const char *format, ...)
 
     for (ptr = format; *ptr != '\0'; ++ptr)
     {
-        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i' || *(ptr + 1) == 'u' || *(ptr + 1) == 'b' || *(ptr + 1) == 'x' || *(ptr + 1) == 'X'))
+        if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i' || *(ptr + 1) == 'u' || *(ptr + 1) == 'b' || *(ptr + 1) == 'x' || *(ptr + 1) == 'X' || *(ptr + 1) == 'S'))
         {
             switch (*(ptr + 1))
             {
@@ -86,6 +86,10 @@ int _printf(const char *format, ...)
                     unsigned int num = va_arg(args, unsigned int);
                     count += print_hex(num, (*(ptr + 1) == 'X') ? 1 : 0);
                 }
+                    break;
+                case 'S':
+                    str = va_arg(args, char *);
+                    count += print_custom_string(str);
                     break;
 
                 default:

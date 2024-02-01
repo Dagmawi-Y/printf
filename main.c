@@ -23,6 +23,7 @@ int main(void)
     _printf("Percent:%%\n");
     _printf("Binary:%b\n", 98);
     _printf("Hexadecimal:%X\n", 255);
+    _printf("%S\n", "Best\nSchool");
 
     return (0);
 }
