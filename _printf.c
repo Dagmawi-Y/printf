@@ -28,6 +28,19 @@ int _printf(const char *format, ...)
     {
         if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i' || *(ptr + 1) == 'u' || *(ptr + 1) == 'b' || *(ptr + 1) == 'x' || *(ptr + 1) == 'X' || *(ptr + 1) == 'S' || *(ptr + 1) == 'o'))
         {
+            int is_flag_plus = 0;
+            int is_flag_space = 0;
+
+            /* Check for the + and space flags */
+            while (*(ptr + 2) == '+' || *(ptr + 2) == ' ')
+            {
+                if (*(ptr + 2) == '+')
+                    is_flag_plus = 1;
+                else if (*(ptr + 2) == ' ')
+                    is_flag_space = 1;
+                ++ptr;
+            }
+
             switch (*(ptr + 1))
             {
                 case 'c':
@@ -56,7 +69,7 @@ int _printf(const char *format, ...)
                     /* Assuming a reasonable buffer size */
                     char buffer[20];
                     int num = va_arg(args, int);
-                    sprintf(buffer, "%d", num);
+                    sprintf(buffer, (is_flag_plus ? "+%d" : (is_flag_space ? " %d" : "%d")), num);
                     count += write(1, buffer, strlen(buffer));
                 }
                     break;
@@ -82,14 +95,26 @@ int _printf(const char *format, ...)
                 case 'X':
                 {
                     /* Assuming a reasonable buffer size */
-
                     unsigned int num = va_arg(args, unsigned int);
-                    count += print_hex(num, (*(ptr + 1) == 'X') ? 1 : 0);
+                    char buffer[20];
+                    sprintf(buffer, (is_flag_plus ? "+%x" : (is_flag_space ? " %x" : "%x")),
+                            print_hex(num, (*(ptr + 1) == 'X') ? 1 : 0));
+                    count += write(1, buffer, strlen(buffer));
                 }
                     break;
                 case 'S':
                     str = va_arg(args, char *);
                     count += print_custom_string(str);
+                    break;
+
+                case 'o':
+                {
+                    /* Assuming a reasonable buffer size */
+                    unsigned int num = va_arg(args, unsigned int);
+                    char buffer[20];
+                    sprintf(buffer, (is_flag_plus ? "+%o" : (is_flag_space ? " %o" : "%o")), num);
+                    count += write(1, buffer, strlen(buffer));
+                }
                     break;
 
                 default:
