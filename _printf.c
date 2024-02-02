@@ -28,21 +28,6 @@ int _printf(const char *format, ...)
     {
         if (*ptr == '%' && (*(ptr + 1) == 'c' || *(ptr + 1) == 's' || *(ptr + 1) == '%' || *(ptr + 1) == 'p' || *(ptr + 1) == 'd' || *(ptr + 1) == 'i' || *(ptr + 1) == 'u' || *(ptr + 1) == 'b' || *(ptr + 1) == 'x' || *(ptr + 1) == 'X' || *(ptr + 1) == 'S' || *(ptr + 1) == 'o'))
         {
-            int plusFlag = 0;
-            int spaceFlag = 0;
-            int hashFlag = 0;
-
-            while (*(++ptr) == '+' || *(ptr) == ' ' || *(ptr) == '#')
-            {
-                if (*ptr == '+')
-                    plusFlag = 1;
-                else if (*ptr == ' ')
-                    spaceFlag = 1;
-                else if (*ptr == '#')
-                    hashFlag = 1;
-            }
-            --ptr;
-
             switch (*(ptr + 1))
             {
                 case 'c':
@@ -71,11 +56,6 @@ int _printf(const char *format, ...)
                     /* Assuming a reasonable buffer size */
                     char buffer[20];
                     int num = va_arg(args, int);
-                    if (plusFlag && num >= 0)
-                        count += write(1, "+", 1);
-                    else if (spaceFlag && num >= 0)
-                        count += write(1, " ", 1);
-
                     sprintf(buffer, "%d", num);
                     count += write(1, buffer, strlen(buffer));
                 }
@@ -85,11 +65,6 @@ int _printf(const char *format, ...)
                     /* Assuming a reasonable buffer size */
                     char buffer[20];
                     unsigned int num = va_arg(args, unsigned int);
-                    if (plusFlag)
-                        count += write(1, "+", 1);
-                    else if (spaceFlag)
-                        count += write(1, " ", 1);
-
                     sprintf(buffer, "%u", num);
                     count += write(1, buffer, strlen(buffer));
                 }
@@ -109,9 +84,6 @@ int _printf(const char *format, ...)
                     /* Assuming a reasonable buffer size */
 
                     unsigned int num = va_arg(args, unsigned int);
-                    if (hashFlag && num != 0)
-                        count += write(1, (*(ptr + 1) == 'X') ? "0X" : "0x", 2);
-
                     count += print_hex(num, (*(ptr + 1) == 'X') ? 1 : 0);
                 }
                     break;
@@ -119,22 +91,12 @@ int _printf(const char *format, ...)
                     str = va_arg(args, char *);
                     count += print_custom_string(str);
                     break;
-                case 'o':
-                {
-                    /* Assuming a reasonable buffer size */
-                    char buffer[20];
-                    unsigned int num = va_arg(args, unsigned int);
-                    if (hashFlag && num != 0)
-                        count += write(1, "0", 1);
 
-                    sprintf(buffer, "%o", num);
-                    count += write(1, buffer, strlen(buffer));
-                }
-                    break;
                 default:
                     fprintf(stderr, "Error: Unknown conversion specifier '%c'\n", *(ptr + 1));
                     return (-1);
             }
+            ++ptr;
         }
         else
         {

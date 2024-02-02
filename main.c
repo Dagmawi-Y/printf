@@ -15,18 +15,14 @@ int main(void)
     len = _printf("Let's try to printf a simple sentence.\n");
     ui = (unsigned int)INT_MAX + 1024;
     addr = (void *)0x7ffe637541f0;
-
-    _printf("\nTest with flags:\n");
-
     _printf("Length:%d\n", len);
-    _printf("Unsigned with '+' flag:%+u\n", ui);
-    _printf("Unsigned with ' ' flag:% u\n", ui);
+    _printf("Unsigned:%u\n", ui);
     _printf("Character:%c\n", 'H');
     _printf("String:%s\n", "I am a string !");
     _printf("Address:%p\n", addr);
-    _printf("Percent with '#' flag: %#%\n");
+    _printf("Percent:%%\n");
     _printf("Binary:%b\n", 98);
-    _printf("Hexadecimal with '#' flag: %#X\n", 255);
+    _printf("Hexadecimal:%X\n", 255);
     _printf("%S\n", "Best\nSchool");
 
     return (0);
