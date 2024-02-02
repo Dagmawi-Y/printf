@@ -1,29 +1,35 @@
+#include <stdio.h>
 #include "main.h"
-#include <limits.h>
 
-/**
- * main - Entry point
- *
- * Return: Always 0
- */
 int main(void)
 {
-    int len;
-    unsigned int ui;
-    void *addr;
+    int ret;
 
-    len = _printf("Let's try to printf a simple sentence.\n");
-    ui = (unsigned int)INT_MAX + 1024;
-    addr = (void *)0x7ffe637541f0;
-    _printf("Length:%d\n", len);
-    _printf("Unsigned:%u\n", ui);
-    _printf("Character:%c\n", 'H');
-    _printf("String:%s\n", "I am a string !");
-    _printf("Address:%p\n", addr);
-    _printf("Percent:%%\n");
-    _printf("Binary:%b\n", 98);
-    _printf("Hexadecimal:%X\n", 255);
-    _printf("%S\n", "Best\nSchool");
+    ret = _printf("Test case 1: %d\n", 42);
+    printf("Expected output 1: Test case 1: 42\n");
+    printf("Actual output 1:   ");
+    printf("Return value: %d\n\n", ret);
 
-    return (0);
+    ret = _printf("Test case 2: %+d\n", 42);
+    printf("Expected output 2: Test case 2: +42\n");
+    printf("Actual output 2:   ");
+    printf("Return value: %d\n\n", ret);
+
+    ret = _printf("Test case 3: % d\n", 42);
+    printf("Expected output 3: Test case 3:  42\n");
+    printf("Actual output 3:   ");
+    printf("Return value: %d\n\n", ret);
+
+    ret = _printf("Test case 4: %#o\n", 42);
+    printf("Expected output 4: Test case 4: #52\n");
+    printf("Actual output 4:   ");
+    printf("Return value: %d\n\n", ret);
+
+
+    ret = _printf("Test case 5: %+ d\n", 42);
+    printf("Expected output 5: Test case 5: + 42\n");
+    printf("Actual output 5:   ");
+    printf("Return value: %d\n\n", ret);
+
+    return 0;
 }
