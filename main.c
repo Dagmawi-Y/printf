@@ -1,25 +1,29 @@
 #include "main.h"
+#include <limits.h>
 
+/**
+ * main - Entry point
+ *
+ * Return: Always 0
+ */
 int main(void)
 {
-    char c = 'A';
-    char *str = "Hello, World!";
-    int num = 123;
-    unsigned int uNum = 456;
-    void *addr = (void *)0x12345678;
+    int len;
+    unsigned int ui;
+    void *addr;
 
-    _printf("Integer with plus flag: %+d\n", num);
-    _printf("Integer with space flag: % d\n", num);
+    len = _printf("Let's try to printf a simple sentence.\n");
+    ui = (unsigned int)INT_MAX + 1024;
+    addr = (void *)0x7ffe637541f0;
+    _printf("Length:%d\n", len);
+    _printf("Unsigned:%u\n", ui);
+    _printf("Character:%c\n", 'H');
+    _printf("String:%s\n", "I am a string !");
+    _printf("Address:%p\n", addr);
+    _printf("Percent:%%\n");
+    _printf("Binary:%b\n", 98);
+    _printf("Hexadecimal:%X\n", 255);
+    _printf("%S\n", "Best\nSchool");
 
-    _printf("Hexadecimal with hash flag: %#x\n", uNum);
-    _printf("Hexadecimal with uppercase and hash flags: %#X\n", uNum);
-
-    _printf("Octal with hash flag: %#o\n", uNum);
-
-    _printf("Pointer address: %p\n", addr);
-
-    _printf("Character: %c\n", c);
-    _printf("String: %s\n", str);
-
-    return 0;
+    return (0);
 }
