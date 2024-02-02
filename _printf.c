@@ -116,8 +116,6 @@ int _printf(const char *format, ...)
                     fprintf(stderr, "Error: Unknown conversion specifier '%c'\n", *(ptr));
                     return (-1);
             }
-
-            --ptr;
         }
         else
         {
