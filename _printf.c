@@ -20,7 +20,7 @@ int _printf(const char *format, ...)
     void *addr;
     int hash;
     int space;
-    int plus;
+    int num = 0;
 
     va_start(args, format);
 
@@ -33,7 +33,6 @@ int _printf(const char *format, ...)
         {
             hash = 0;
             space = 0;
-            plus = 0;
 
             while (*(++ptr) == '#' || *ptr == ' ' || *ptr == '+')
             {
@@ -42,7 +41,7 @@ int _printf(const char *format, ...)
                 else if (*ptr == ' ')
                     space = 1;
                 else if (*ptr == '+')
-                    plus = 1;
+                    handle_flags('+', num, &count);
             }
 
             switch (*(ptr))
@@ -71,18 +70,12 @@ int _printf(const char *format, ...)
                 {
                     char buffer[20];
                     int num = va_arg(args, int);
-                    if (num >= 0)
-                    {
-                        if (space && !plus)
-                            count += write(1, " ", 1);
-                        else if (plus)
-                            count += write(1, "+", 1);
-                    }
+                    if (space && num >= 0)
+                        count += write(1, " ", 1);
                     sprintf(buffer, (hash && *(ptr) == 'o') ? "#%d" : "%d", num);
                     count += write(1, buffer, strlen(buffer));
                 }
                     break;
-
                 case 'u':
                 {
                     /* Assuming a reasonable buffer size */
@@ -137,4 +130,3 @@ int _printf(const char *format, ...)
 
     return (count);
 }
-
